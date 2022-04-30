@@ -59,6 +59,4 @@ sysinfo.txt
 crashlytics-build.properties
 
 .DS_Store
-seykounity/Library
-seykounity/Temp
-seykounity/Logs
+
