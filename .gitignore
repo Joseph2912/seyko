@@ -59,4 +59,11 @@ sysinfo.txt
 crashlytics-build.properties
 
 .DS_Store
-
+My project/Library
+My project/.vsconfig
+My project/UserSettings
+My project/Temp
+My project/Logs
+My project/Builds
+My project/ProjectSettings
+My project/obj
