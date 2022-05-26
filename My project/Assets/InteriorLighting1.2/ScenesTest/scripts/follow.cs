@@ -9,6 +9,8 @@ public class follow : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject spawnZone;
+    [SerializeField] private GameObject enemybody;
+    [SerializeField] private GameObject enemyhead;
     [SerializeField] private float vaina = 0;
     private float enemyspeed = 5f;
     private float enemywidth = 0.5f;
@@ -17,7 +19,6 @@ public class follow : MonoBehaviour
     public float angle = 45f;
     private int cant = 200 ;
     private Vector3 EnemyOut = new Vector3(0, -10, 0);
-
     private NavMeshAgent navMeshAgent;
     [SerializeField] private Transform moveToPosition;
 
@@ -60,8 +61,8 @@ public class follow : MonoBehaviour
         for (int i = 0; i <= cant; i++)
         {
             float rayanglespacing = (angle * 2 / cant);
-            Debug.DrawRay(player.transform.position + new Vector3(0, 0, 0), (Quaternion.AngleAxis(angle - (rayanglespacing * i), player.transform.up) * player.transform.forward) * raymaxdistance, Color.blue);
-            bool enemyisHit = Physics.Raycast(origin: player.transform.position + new Vector3(0, 0, 0), direction: (Quaternion.AngleAxis(angle - (rayanglespacing * i), player.transform.up) * player.transform.forward), out hit, raymaxdistance);
+            Debug.DrawRay(player.transform.position + new Vector3(0, 2, 0), (Quaternion.AngleAxis(angle - (rayanglespacing * i), player.transform.up) * player.transform.forward) * raymaxdistance, Color.blue);
+            bool enemyisHit = Physics.Raycast(origin: player.transform.position + new Vector3(0, 2, 0), direction: (Quaternion.AngleAxis(angle - (rayanglespacing * i), player.transform.up) * player.transform.forward), out hit, raymaxdistance);
             if (enemyisHit)
             {
                 if(hit.transform.gameObject == gameObject)
@@ -75,12 +76,14 @@ public class follow : MonoBehaviour
         }
         if (nhit != 0)
         {
+            gameObject.GetComponent<Rigidbody>().freezeRotation = true;
             gameObject.GetComponent<NavMeshAgent>().enabled = false;
             enemystoped();   
         }
         else
         {
             gameObject.GetComponent<NavMeshAgent>().enabled = true;
+            gameObject.GetComponent<Rigidbody>().freezeRotation = false;
             Enemymoving();
         }
     }
@@ -88,14 +91,14 @@ public class follow : MonoBehaviour
     {
 
         int nhit = 0;
-        transform.forward = player.transform.position - transform.position; //mirar jugador
+        enemyhead.transform.forward = player.transform.position - enemyhead.transform.position; //mirar jugador
         RaycastHit hit;
        
         for (int i = 0; i < 3; i++)
         {
             
             float rayspacing = (enemywidth / 2) * -1;
-            bool playerisHit = Physics.Raycast(origin: transform.position + new Vector3(rayspacing + (rayspacing * -i), 0, 0), direction: (Quaternion.AngleAxis(0, transform.up) * transform.forward), out hit, raymaxdistance);
+            bool playerisHit = Physics.Raycast(origin: transform.position + new Vector3(rayspacing + (rayspacing * -i), 2, 0), direction: (Quaternion.AngleAxis(0, enemyhead.transform.up) * enemyhead.transform.forward), out hit, raymaxdistance);
             if (playerisHit)
             {
                 if (hit.transform.gameObject == player)
@@ -119,12 +122,13 @@ public class follow : MonoBehaviour
     }
     private void Enemymoving()
     {
+        transform.forward = player.transform.position - transform.position; //mirar jugador
         navMeshAgent.destination = moveToPosition.position;
         //transform.position = Vector3.MoveTowards(transform.position, player.transform.position, enemyspeed * Time.deltaTime);
         for (int i = 0; i < 3; i++)
         {
             float rayspacing = (enemywidth / 2) * -1;
-            Debug.DrawRay(transform.position + new Vector3(rayspacing + (rayspacing * -i), 0, 0), (Quaternion.AngleAxis(0, transform.up) * transform.forward) * raymaxdistance, Color.green);
+            Debug.DrawRay(transform.position + new Vector3(rayspacing + (rayspacing * -i), 2, 0), (Quaternion.AngleAxis(0, enemyhead.transform.up) * enemyhead.transform.forward) * raymaxdistance, Color.green);
         }
     }
     private void enemystoped()
@@ -132,7 +136,7 @@ public class follow : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             float rayspacing = (enemywidth / 2) * -1;
-            Debug.DrawRay(transform.position + new Vector3(rayspacing + (rayspacing * -i), 0, 0), (Quaternion.AngleAxis(0, transform.up) * transform.forward) * raymaxdistance, Color.red);
+            Debug.DrawRay(transform.position + new Vector3(rayspacing + (rayspacing * -i), 2, 0), (Quaternion.AngleAxis(0, enemyhead.transform.up) * enemyhead.transform.forward) * raymaxdistance, Color.red);
         }
     }
     private void Spawncheck()
@@ -143,7 +147,7 @@ public class follow : MonoBehaviour
         if (wallisHit)
         {
             float hitdistance = (hit.distance*-1);
-            print(hitdistance);
+            //print(hitdistance);
          
             spawnZone.transform.parent = player.transform.transform;
             spawnZone.transform.localPosition = new Vector3(spawnZone.transform.localPosition.x, spawnZone.transform.localPosition.y, hitdistance/2.6f);

@@ -5,6 +5,7 @@ using UnityStandardAssets.CrossPlatformInput;
 [RequireComponent(typeof (UnityEngine.UI.Image))]
 public class ForcedReset : MonoBehaviour
 {
+    [Obsolete]
     private void Update()
     {
         // if we have forced a reset ...
