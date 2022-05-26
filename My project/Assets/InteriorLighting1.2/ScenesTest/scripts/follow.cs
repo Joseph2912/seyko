@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class follow : MonoBehaviour
 {
+
     // Start is called before the first frame update
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject spawnZone;
@@ -20,9 +21,11 @@ public class follow : MonoBehaviour
     private NavMeshAgent navMeshAgent;
     [SerializeField] private Transform moveToPosition;
 
+
     void Start()
     {
         transform.position = EnemyOut;
+        gameObject.GetComponent<NavMeshAgent>().enabled = false;
     }
 
     private void Awake()
@@ -57,7 +60,7 @@ public class follow : MonoBehaviour
         for (int i = 0; i <= cant; i++)
         {
             float rayanglespacing = (angle * 2 / cant);
-            Debug.DrawRay(new Vector3(0, 0, 0), (Quaternion.AngleAxis(angle - (rayanglespacing * i), player.transform.up) * player.transform.forward) * raymaxdistance, Color.blue);
+            Debug.DrawRay(player.transform.position + new Vector3(0, 0, 0), (Quaternion.AngleAxis(angle - (rayanglespacing * i), player.transform.up) * player.transform.forward) * raymaxdistance, Color.blue);
             bool enemyisHit = Physics.Raycast(origin: player.transform.position + new Vector3(0, 0, 0), direction: (Quaternion.AngleAxis(angle - (rayanglespacing * i), player.transform.up) * player.transform.forward), out hit, raymaxdistance);
             if (enemyisHit)
             {
@@ -72,18 +75,20 @@ public class follow : MonoBehaviour
         }
         if (nhit != 0)
         {
-            enemystoped();
+            gameObject.GetComponent<NavMeshAgent>().enabled = false;
+            enemystoped();   
         }
         else
         {
+            gameObject.GetComponent<NavMeshAgent>().enabled = true;
             Enemymoving();
         }
     }
     private void EnemyLook()
     {
+
         int nhit = 0;
-        navMeshAgent.destination = moveToPosition.position;
-        //transform.forward = player.transform.position - transform.position; //mirar jugador
+        transform.forward = player.transform.position - transform.position; //mirar jugador
         RaycastHit hit;
        
         for (int i = 0; i < 3; i++)
@@ -114,7 +119,8 @@ public class follow : MonoBehaviour
     }
     private void Enemymoving()
     {
-        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, enemyspeed * Time.deltaTime);
+        navMeshAgent.destination = moveToPosition.position;
+        //transform.position = Vector3.MoveTowards(transform.position, player.transform.position, enemyspeed * Time.deltaTime);
         for (int i = 0; i < 3; i++)
         {
             float rayspacing = (enemywidth / 2) * -1;
@@ -140,7 +146,7 @@ public class follow : MonoBehaviour
             print(hitdistance);
          
             spawnZone.transform.parent = player.transform.transform;
-            spawnZone.transform.localPosition = new Vector3(spawnZone.transform.localPosition.x, spawnZone.transform.localPosition.y, hitdistance);
+            spawnZone.transform.localPosition = new Vector3(spawnZone.transform.localPosition.x, spawnZone.transform.localPosition.y, hitdistance/2.6f);
             
         }
         
