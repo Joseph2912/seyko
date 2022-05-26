@@ -11,20 +11,28 @@ public class follow : MonoBehaviour
     [SerializeField] private GameObject spawnZone;
     [SerializeField] private GameObject enemybody;
     [SerializeField] private GameObject enemyhead;
+    [SerializeField] private Material quads;
     [SerializeField] private float vaina = 0;
     private float enemyspeed = 5f;
     private float enemywidth = 0.5f;
     private float raymaxdistance = 200f;
-    private bool spawnState = false;
+    public bool spawnState = false;
     public float angle = 45f;
     private int cant = 200 ;
     private Vector3 EnemyOut = new Vector3(0, -10, 0);
     private NavMeshAgent navMeshAgent;
     [SerializeField] private Transform moveToPosition;
-
+    [SerializeField] float lerptime;
+    private Color enemycolor;
+    private Color Noenemycolor;
 
     void Start()
     {
+        //lerptime = 0.02f;
+        Noenemycolor = new Color(0.650f, 0.650f, 0.650f);
+        enemycolor = new Color(0.811f, 0.249f, 0.249f);
+        quads.color = Noenemycolor;
+        //quads.color = new Color(0.811f, 0.249f, 0.249f);
         transform.position = EnemyOut;
         gameObject.GetComponent<NavMeshAgent>().enabled = false;
     }
@@ -40,6 +48,7 @@ public class follow : MonoBehaviour
         
         if (spawnState == true)
         {
+            quads.color = Color.Lerp(quads.color, enemycolor, lerptime);
             EnemyLook();
         }
         else
@@ -49,7 +58,8 @@ public class follow : MonoBehaviour
                 transform.position = spawnZone.transform.position;
                 spawnState = true;
             }
-          
+
+            quads.color = Color.Lerp(quads.color, Noenemycolor, lerptime);
             Spawncheck();
         }
         
@@ -76,14 +86,14 @@ public class follow : MonoBehaviour
         }
         if (nhit != 0)
         {
-            gameObject.GetComponent<Rigidbody>().freezeRotation = true;
+            gameObject.GetComponent<Rigidbody>().Sleep();
             gameObject.GetComponent<NavMeshAgent>().enabled = false;
             enemystoped();   
         }
         else
         {
             gameObject.GetComponent<NavMeshAgent>().enabled = true;
-            gameObject.GetComponent<Rigidbody>().freezeRotation = false;
+            gameObject.GetComponent<Rigidbody>().WakeUp();
             Enemymoving();
         }
     }
@@ -114,6 +124,8 @@ public class follow : MonoBehaviour
         }
         else
         {
+            gameObject.GetComponent<Rigidbody>().Sleep();
+            gameObject.GetComponent<NavMeshAgent>().enabled = false;
             transform.position = EnemyOut;
             enemystoped();
             spawnState = false;

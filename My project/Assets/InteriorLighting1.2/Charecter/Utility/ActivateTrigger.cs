@@ -24,7 +24,7 @@ namespace UnityStandardAssets.Utility
         public int triggerCount = 1;
         public bool repeatTrigger = false;
 
-
+        [Obsolete]
         private void DoActivateTrigger()
         {
             triggerCount--;

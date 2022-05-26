@@ -37,7 +37,7 @@ namespace UnityStandardAssets.Utility
         
         public Entries entries = new Entries();
 
-        
+        [Obsolete]
         private void Awake()
         {
             foreach (Entry entry in entries.entries)
@@ -75,7 +75,7 @@ namespace UnityStandardAssets.Utility
             entry.target.SetActive(false);
         }
 
-
+        [Obsolete]
         private IEnumerator ReloadLevel(Entry entry)
         {
             yield return new WaitForSeconds(entry.delay);

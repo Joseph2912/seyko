@@ -30,12 +30,14 @@ public class CameraMove : MonoBehaviour {
 	private float rotationX = 0.0f;
 	private float rotationY = 0.0f;
 
-	void Start ()
+    [System.Obsolete]
+    void Start ()
 	{
 		Screen.lockCursor = true;
 	}
 
-	void Update ()
+    [System.Obsolete]
+    void Update ()
 	{
 		rotationX += Input.GetAxis("Mouse X") * cameraSensitivity * Time.deltaTime;
 		rotationY += Input.GetAxis("Mouse Y") * cameraSensitivity * Time.deltaTime;
