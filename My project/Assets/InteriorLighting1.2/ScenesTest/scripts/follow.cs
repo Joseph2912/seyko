@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class follow : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject spawnZone;
+    [SerializeField] private float vaina = 0;
     private float enemyspeed = 5f;
     private float enemywidth = 0.5f;
     private float raymaxdistance = 200f;
@@ -14,10 +16,18 @@ public class follow : MonoBehaviour
     public float angle = 45f;
     private int cant = 200 ;
     private Vector3 EnemyOut = new Vector3(0, -10, 0);
-   
+
+    private NavMeshAgent navMeshAgent;
+    [SerializeField] private Transform moveToPosition;
+
     void Start()
     {
         transform.position = EnemyOut;
+    }
+
+    private void Awake()
+    {
+        navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -47,7 +57,7 @@ public class follow : MonoBehaviour
         for (int i = 0; i <= cant; i++)
         {
             float rayanglespacing = (angle * 2 / cant);
-            Debug.DrawRay(player.transform.position + new Vector3(0, 0, 0), (Quaternion.AngleAxis(angle - (rayanglespacing * i), player.transform.up) * player.transform.forward) * raymaxdistance, Color.blue);
+            Debug.DrawRay(new Vector3(0, 0, 0), (Quaternion.AngleAxis(angle - (rayanglespacing * i), player.transform.up) * player.transform.forward) * raymaxdistance, Color.blue);
             bool enemyisHit = Physics.Raycast(origin: player.transform.position + new Vector3(0, 0, 0), direction: (Quaternion.AngleAxis(angle - (rayanglespacing * i), player.transform.up) * player.transform.forward), out hit, raymaxdistance);
             if (enemyisHit)
             {
@@ -72,7 +82,8 @@ public class follow : MonoBehaviour
     private void EnemyLook()
     {
         int nhit = 0;
-        transform.forward = player.transform.position - transform.position; //mirar jugador
+        navMeshAgent.destination = moveToPosition.position;
+        //transform.forward = player.transform.position - transform.position; //mirar jugador
         RaycastHit hit;
        
         for (int i = 0; i < 3; i++)
@@ -121,11 +132,11 @@ public class follow : MonoBehaviour
     private void Spawncheck()
     {
         RaycastHit hit;
-        Debug.DrawRay(player.transform.position + new Vector3(0, 0, 0), (Quaternion.AngleAxis(180, player.transform.up) * player.transform.forward) * raymaxdistance, Color.cyan);
-        bool wallisHit = Physics.Raycast(origin: player.transform.position + new Vector3(0, 0, 0), direction: (Quaternion.AngleAxis(180, player.transform.up) * player.transform.forward), out hit, raymaxdistance);
+        Debug.DrawRay(player.transform.position + new Vector3(0,2.67f, 0), (Quaternion.AngleAxis(180, player.transform.up) * player.transform.forward) * raymaxdistance, Color.cyan);
+        bool wallisHit = Physics.Raycast(origin: player.transform.position + new Vector3(0, 2.67f, 0), direction: (Quaternion.AngleAxis(180, player.transform.up) * player.transform.forward), out hit, raymaxdistance);
         if (wallisHit)
         {
-            float hitdistance = (hit.distance*-1)+2;
+            float hitdistance = (hit.distance*-1);
             print(hitdistance);
          
             spawnZone.transform.parent = player.transform.transform;

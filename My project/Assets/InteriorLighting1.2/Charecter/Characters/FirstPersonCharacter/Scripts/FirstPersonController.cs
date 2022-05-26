@@ -35,7 +35,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private CharacterController m_CharacterController;
         private CollisionFlags m_CollisionFlags;
         private bool m_PreviouslyGrounded;
-        private Vector3 m_OriginalCameraPosition;
+        //private Vector3 m_OriginalCameraPosition;
         private float m_StepCycle;
         private float m_NextStep;
         private bool m_Jumping;
@@ -46,9 +46,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
-            m_OriginalCameraPosition = m_Camera.transform.localPosition;
-            m_FovKick.Setup(m_Camera);
-            m_HeadBob.Setup(m_Camera, m_StepInterval);
+          //  m_OriginalCameraPosition = m_Camera.transform.localPosition;
+//            m_FovKick.Setup(m_Camera);
+//            m_HeadBob.Setup(m_Camera, m_StepInterval);
             m_StepCycle = 0f;
             m_NextStep = m_StepCycle/2f;
             m_Jumping = false;
@@ -60,15 +60,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void Update()
         {
             // the jump state needs to read here to make sure it is not missed
-            if (!m_Jump)
+           /* if (!m_Jump)
             {
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-            }
+            }*/
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
             {
                 StartCoroutine(m_JumpBob.DoBobCycle());
-                PlayLandingSound();
+               // PlayLandingSound();
                 m_MoveDir.y = 0f;
                 m_Jumping = false;
             }
@@ -83,7 +83,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void PlayLandingSound()
         {
-            m_AudioSource.clip = m_LandSound;
+//            m_AudioSource.clip = m_LandSound;
             m_AudioSource.Play();
             m_NextStep = m_StepCycle + .5f;
         }
@@ -125,7 +125,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
             ProgressStepCycle(speed);
-            UpdateCameraPosition(speed);
+            //UpdateCameraPosition(speed);
         }
 
 
@@ -156,14 +156,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
 
         private void PlayFootStepAudio()
-        {
-            if (!m_CharacterController.isGrounded)
-            {
-                return;
-            }
+        { 
             // pick & play a random footstep sound from the array,
             // excluding sound at index 0
-            int n = Random.Range(1, m_FootstepSounds.Length);
+            int n = 1;
             m_AudioSource.clip = m_FootstepSounds[n];
             m_AudioSource.PlayOneShot(m_AudioSource.clip);
             // move picked sound to index 0 so it's not picked next time
@@ -190,7 +186,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             else
             {
                 newCameraPosition = m_Camera.transform.localPosition;
-                newCameraPosition.y = m_OriginalCameraPosition.y - m_JumpBob.Offset();
+               // newCameraPosition.y = m_OriginalCameraPosition.y - m_JumpBob.Offset();
             }
             m_Camera.transform.localPosition = newCameraPosition;
         }
@@ -221,11 +217,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             // handle speed change to give an fov kick
             // only if the player is going to a run, is running and the fovkick is to be used
-            if (m_IsWalking != waswalking && m_UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0)
+            /*if (m_IsWalking != waswalking && m_UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0)
             {
                 StopAllCoroutines();
                 StartCoroutine(!m_IsWalking ? m_FovKick.FOVKickUp() : m_FovKick.FOVKickDown());
-            }
+            }*/
         }
 
 
