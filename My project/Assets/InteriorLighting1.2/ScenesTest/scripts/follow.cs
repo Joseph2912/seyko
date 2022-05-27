@@ -12,8 +12,9 @@ public class follow : MonoBehaviour
     [SerializeField] private GameObject enemybody;
     [SerializeField] private GameObject enemyhead;
     [SerializeField] private Material quads;
+    [SerializeField] private GameObject lights;
     [SerializeField] private float vaina = 0;
-    private float enemyspeed = 5f;
+ 
     private float enemywidth = 0.5f;
     private float raymaxdistance = 200f;
     public bool spawnState = false;
@@ -25,9 +26,14 @@ public class follow : MonoBehaviour
     [SerializeField] float lerptime;
     private Color enemycolor;
     private Color Noenemycolor;
+    public bool playerlooking;
+    private Color lightcolor;
+    private float lightchek;
+    public bool playerdead;
 
     void Start()
     {
+        playerdead = false;
         //lerptime = 0.02f;
         Noenemycolor = new Color(0.650f, 0.650f, 0.650f);
         enemycolor = new Color(0.811f, 0.249f, 0.249f);
@@ -45,24 +51,58 @@ public class follow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        if (spawnState == true)
+        if (playerdead == false)
         {
-            quads.color = Color.Lerp(quads.color, enemycolor, lerptime);
-            EnemyLook();
+            if (spawnState == true)
+            {
+
+                lightcolor = lights.GetComponent<Light>().color;
+                lightchek = lightcolor.r + lightcolor.g + lightcolor.b;
+                if (lightchek < 0.3f)
+                {
+                   
+                    playerdead = true;
+                }
+                quads.color = Color.Lerp(quads.color, enemycolor, lerptime);
+                EnemyLook();
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.M))
+                {
+                    transform.position = spawnZone.transform.position;
+                    spawnState = true;
+                }
+
+                quads.color = Color.Lerp(quads.color, Noenemycolor, lerptime);
+                Spawncheck();
+            }
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                transform.position = spawnZone.transform.position;
-                spawnState = true;
-            }
-
-            quads.color = Color.Lerp(quads.color, Noenemycolor, lerptime);
-            Spawncheck();
+            Killplayer();
         }
-        
+    }
+    private void Killplayer()
+    {
+        int i = 0;
+        if (i == 0)
+        {
+            gameObject.GetComponent<NavMeshAgent>().enabled = false;
+            gameObject.GetComponent<Rigidbody>().Sleep();
+            gameObject.GetComponent<Rigidbody>().freezeRotation = true;
+            gameObject.GetComponent<Collider>().enabled = false;
+
+            transform.parent = player.transform.transform;
+
+            transform.localPosition = new Vector3(0, transform.localPosition.y, transform.localPosition.z);
+            transform.localRotation = Quaternion.Euler(0, 180, 0);
+
+            i = 1;
+        }
+
+        transform.localPosition = Vector3.MoveTowards(transform.localPosition, new Vector3(0f, transform.localPosition.y, 0.6f), 20 * Time.deltaTime);
+
     }
     private void PlayerLook()
     {
@@ -86,16 +126,19 @@ public class follow : MonoBehaviour
         }
         if (nhit != 0)
         {
+            playerlooking = true;
             gameObject.GetComponent<Rigidbody>().Sleep();
             gameObject.GetComponent<NavMeshAgent>().enabled = false;
             enemystoped();   
         }
         else
         {
+            playerlooking = false;
             gameObject.GetComponent<NavMeshAgent>().enabled = true;
             gameObject.GetComponent<Rigidbody>().WakeUp();
             Enemymoving();
         }
+        
     }
     private void EnemyLook()
     {
