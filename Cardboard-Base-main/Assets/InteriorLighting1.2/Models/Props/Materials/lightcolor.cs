@@ -28,7 +28,7 @@ public class lightcolor : MonoBehaviour
         {
             if(playerlooking == true)
             {
-                ObjectColor.color = Color.Lerp(ObjectColor.color, lookingcolor, 0.01f);
+                ObjectColor.color = Color.Lerp(ObjectColor.color, lookingcolor, 0.007f);
             }
             else
             {

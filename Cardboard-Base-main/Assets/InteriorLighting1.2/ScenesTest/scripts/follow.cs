@@ -14,7 +14,8 @@ public class follow : MonoBehaviour
     [SerializeField] private Material quads;
     [SerializeField] private GameObject lights;
     [SerializeField] private float vaina = 0;
- 
+    [SerializeField] private GameObject playerhead;
+  
     private float enemywidth = 0.5f;
     private float raymaxdistance = 200f;
     public bool spawnState = false;
@@ -51,6 +52,8 @@ public class follow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        playerhead.transform.position = new Vector3(player.transform.position.x, playerhead.transform.position.y, player.transform.position.z);
+        player.transform.rotation = Quaternion.Euler(0, playerhead.transform.rotation.eulerAngles.y, 0);
         if (playerdead == false)
         {
             if (spawnState == true)
@@ -71,6 +74,7 @@ public class follow : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.M))
                 {
                     transform.position = spawnZone.transform.position;
+                    
                     spawnState = true;
                 }
 
@@ -152,9 +156,10 @@ public class follow : MonoBehaviour
             
             float rayspacing = (enemywidth / 2) * -1;
             bool playerisHit = Physics.Raycast(origin: transform.position + new Vector3(rayspacing + (rayspacing * -i), 2, 0), direction: (Quaternion.AngleAxis(0, enemyhead.transform.up) * enemyhead.transform.forward), out hit, raymaxdistance);
+            print(hit.transform.name);
             if (playerisHit)
             {
-                if (hit.transform.gameObject == player)
+                if (hit.transform.gameObject == player )
                 {
                     nhit += 1;
                 }
@@ -205,6 +210,9 @@ public class follow : MonoBehaviour
             //print(hitdistance);
          
             spawnZone.transform.parent = player.transform.transform;
+
+            //spawnZone.transform.localPosition = new Vector3(spawnZone.transform.localPosition.x, spawnZone.transform.localPosition.y, hitdistance / 1.1f);
+
             spawnZone.transform.localPosition = new Vector3(spawnZone.transform.localPosition.x, spawnZone.transform.localPosition.y, hitdistance/2.6f);
             
         }
