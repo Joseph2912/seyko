@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 /// MouseLook rotates the transform based on the mouse delta.
 /// Minimum and Maximum values can be used to constrain the possible rotation
@@ -74,4 +75,14 @@ public class MouseLook : MonoBehaviour {
 		if (GetComponent<Rigidbody>())
 			GetComponent<Rigidbody>().freezeRotation = true;
 	}
+
+    internal void Init(Transform transform1, Transform transform2)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal void LookRotation(Transform transform1, Transform transform2)
+    {
+        throw new NotImplementedException();
+    }
 }

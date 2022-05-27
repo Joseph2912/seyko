@@ -80,7 +80,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
         public MouseLook mouseLook = new MouseLook();
         public AdvancedSettings advancedSettings = new AdvancedSettings();
 
-
         private Rigidbody m_RigidBody;
         private CapsuleCollider m_Capsule;
         private float m_YRotation;
@@ -120,7 +119,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             m_RigidBody = GetComponent<Rigidbody>();
             m_Capsule = GetComponent<CapsuleCollider>();
-            MouseLook.Init (transform, cam.transform);
+
+            mouseLook.Init (transform, cam.transform);
         }
 
 
@@ -227,8 +227,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             // get the rotation before it's changed
             float oldYRotation = transform.eulerAngles.y;
-
-            MouseLook.LookRotation (transform, cam.transform);
+            
+            mouseLook.LookRotation (transform, cam.transform);
 
             if (m_IsGrounded || advancedSettings.airControl)
             {
