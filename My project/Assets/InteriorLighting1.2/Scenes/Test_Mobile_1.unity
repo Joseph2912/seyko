@@ -3480,11 +3480,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 688216006}
   m_Mesh: {fileID: 4300004, guid: e2c823699b24fc242aa237ea6208abe3, type: 3}
---- !u!1 &692337907 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 571d6164cca6744f9882bf70112267ab, type: 3}
-  m_PrefabInstance: {fileID: 1519392933}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &692337909 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 571d6164cca6744f9882bf70112267ab, type: 3}
@@ -9408,22 +9403,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1842025752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9cc2635bcf4d4e6bb1e34a33c468ec1, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ccc535d0b6607147a81c6f8317352c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1449358770}
-  spawnZone: {fileID: 224688165}
-  enemybody: {fileID: 692337907}
-  enemyhead: {fileID: 1781607467}
-  quads: {fileID: 2100000, guid: 8e373abce07fa98439a1908428341c9c, type: 2}
-  lights: {fileID: 742840560}
-  vaina: 0
-  spawnState: 0
-  angle: 55
-  moveToPosition: {fileID: 1449358772}
-  lerptime: 0.05
-  playerlooking: 0
-  playerdead: 0
 --- !u!54 &1842025754
 Rigidbody:
   m_ObjectHideFlags: 0
