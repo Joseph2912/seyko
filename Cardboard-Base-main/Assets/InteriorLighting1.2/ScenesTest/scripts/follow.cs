@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class follow : MonoBehaviour
 {
@@ -34,10 +35,11 @@ public class follow : MonoBehaviour
     private float lightchek;
     public bool playerdead;
     public float timer = 0;
-
+    private int i = 0;
     void Start()
     {
         playerdead = false;
+       // spawnState = false;
         //lerptime = 0.02f;
         Noenemycolor = new Color(0.650f, 0.650f, 0.650f);
         enemycolor = new Color(0.811f, 0.249f, 0.249f);
@@ -64,13 +66,15 @@ public class follow : MonoBehaviour
         {
             if (spawnState == true)
             {
-                if (timer < 5)
+                if (timer < 15)
                 {
                     timer += Time.deltaTime;
                 }
-                if (Input.GetKeyDown(KeyCode.F) || timer > 5)
+                if (Input.GetKeyDown(KeyCode.F) || timer > 15)
                 {
-                    enemyOut(); 
+                    timer = 0;
+                    enemyOut();
+                    
                 }
                 lightcolor = lights.GetComponent<Light>().color;
                 lightchek = lightcolor.r + lightcolor.g + lightcolor.b;
@@ -83,13 +87,14 @@ public class follow : MonoBehaviour
             }
             else
             {
-                if(timer < 5)
+                if(timer < 6)
                 {
                    timer += Time.deltaTime;
                 }
-                
+               // print(timer);
                 if(timer > 5 && rayspawndistance < -15f)
                 {
+                    //print(timer);
                     transform.position = spawnZone.transform.position;
                     spawnState = true;
                     timer = 0;
@@ -107,30 +112,40 @@ public class follow : MonoBehaviour
         }
         else
         {
+            
             Killplayer();
         }
     }
     private void Killplayer()
     {
-        int i = 0;
-        if (i == 0)
+        if(i == 0)
         {
-            playerdead = true;
-            gameObject.GetComponent<NavMeshAgent>().enabled = false;
-            gameObject.GetComponent<Rigidbody>().Sleep();
-            gameObject.GetComponent<Rigidbody>().freezeRotation = true;
-            gameObject.GetComponent<Collider>().enabled = false;
-
-            transform.parent = player.transform.transform;
-
-            transform.localPosition = new Vector3(0, transform.localPosition.y, transform.localPosition.z);
-            transform.localRotation = Quaternion.Euler(0, 180, 0);
-            playerhead.transform.rotation = Quaternion.Euler(-7.5f, playerhead.transform.eulerAngles.y, 0);
+            timer = 0;
             i = 1;
         }
+       
+        playerdead = true;
+        gameObject.GetComponent<NavMeshAgent>().enabled = false;
+        gameObject.GetComponent<Rigidbody>().Sleep();
+        gameObject.GetComponent<Rigidbody>().freezeRotation = true;
+        gameObject.GetComponent<Collider>().enabled = false;
 
+        transform.parent = player.transform.transform;
+
+        transform.localPosition = new Vector3(0, transform.localPosition.y, transform.localPosition.z);
+        transform.localRotation = Quaternion.Euler(0, 180, 0);
+        playerhead.transform.rotation = Quaternion.Euler(-7.5f, playerhead.transform.eulerAngles.y, 0);
+        timer += Time.deltaTime;
+        print(timer);
         transform.localPosition = Vector3.MoveTowards(transform.localPosition, new Vector3(0f, transform.localPosition.y, 0.6f), 40 * Time.deltaTime);
-
+        if(timer > 7)
+        {
+            restart();
+        }
+    }
+    private void restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     private void PlayerLook()
     {
