@@ -64,7 +64,11 @@ public class follow : MonoBehaviour
         {
             if (spawnState == true)
             {
-                if (Input.GetKeyDown(KeyCode.F))
+                if (timer < 5)
+                {
+                    timer += Time.deltaTime;
+                }
+                if (Input.GetKeyDown(KeyCode.F) || timer > 5)
                 {
                     enemyOut(); 
                 }
@@ -79,6 +83,17 @@ public class follow : MonoBehaviour
             }
             else
             {
+                if(timer < 5)
+                {
+                   timer += Time.deltaTime;
+                }
+                
+                if(timer > 5 && rayspawndistance < -15f)
+                {
+                    transform.position = spawnZone.transform.position;
+                    spawnState = true;
+                    timer = 0;
+                }
                 if (Input.GetKeyDown(KeyCode.M) && rayspawndistance < -15f)
                 {
                     transform.position = spawnZone.transform.position;
