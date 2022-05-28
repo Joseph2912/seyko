@@ -11,8 +11,10 @@ public class lightcolor : MonoBehaviour
     private Color lookingcolor;
     public Light ObjectColor;
     private bool playerlooking;
+    private bool playerdead; 
     void Start()
     {
+        
         ObjectColor = gameObject.GetComponent<Light>();
         Noenemycolor = new Color(1f, 1f, 1f,1f);
         enemycolor = new Color(1f, 0.149f, 0.149f,1f);
@@ -23,16 +25,24 @@ public class lightcolor : MonoBehaviour
     void Update()
     {
         playerlooking = enemy.GetComponent<follow>().playerlooking;
-        
-        if(enemy.GetComponent<follow>().spawnState == true)
+        playerdead = enemy.GetComponent<follow>().playerdead;
+
+        if (enemy.GetComponent<follow>().spawnState == true)
         {
-            if(playerlooking == true)
+            if(playerlooking == true && playerdead== false)
             {
                 ObjectColor.color = Color.Lerp(ObjectColor.color, lookingcolor, 0.007f);
             }
             else
             {
-                ObjectColor.color = Color.Lerp(ObjectColor.color, enemycolor, lerptime);
+                if(playerdead == false)
+                {
+                    ObjectColor.color = Color.Lerp(ObjectColor.color, enemycolor, lerptime);
+                }  
+            }
+            if (playerdead == true)
+            {
+                ObjectColor.color = Color.Lerp(ObjectColor.color, enemycolor, 0.03f);
             }
             
         }

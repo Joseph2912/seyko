@@ -19,6 +19,7 @@ public class follow : MonoBehaviour
     private float enemywidth = 0.5f;
     private float raymaxdistance = 200f;
     public bool spawnState = false;
+    private float rayspawndistance;
     public float angle = 45f;
     private int cant = 200 ;
     private Vector3 EnemyOut = new Vector3(0, -10, 0);
@@ -52,18 +53,21 @@ public class follow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         playerhead.transform.position = new Vector3(player.transform.position.x, playerhead.transform.position.y, player.transform.position.z);
         player.transform.rotation = Quaternion.Euler(0, playerhead.transform.rotation.eulerAngles.y, 0);
         if (playerdead == false)
         {
             if (spawnState == true)
             {
-
+                if (Input.GetKeyDown(KeyCode.F))
+                {
+                    enemyOut(); 
+                }
                 lightcolor = lights.GetComponent<Light>().color;
                 lightchek = lightcolor.r + lightcolor.g + lightcolor.b;
                 if (lightchek < 0.3f)
                 {
-                   
                     playerdead = true;
                 }
                 quads.color = Color.Lerp(quads.color, enemycolor, lerptime);
@@ -71,7 +75,7 @@ public class follow : MonoBehaviour
             }
             else
             {
-                if (Input.GetKeyDown(KeyCode.M))
+                if (Input.GetKeyDown(KeyCode.M) && rayspawndistance < -15f)
                 {
                     transform.position = spawnZone.transform.position;
                     
@@ -92,6 +96,7 @@ public class follow : MonoBehaviour
         int i = 0;
         if (i == 0)
         {
+            playerdead = true;
             gameObject.GetComponent<NavMeshAgent>().enabled = false;
             gameObject.GetComponent<Rigidbody>().Sleep();
             gameObject.GetComponent<Rigidbody>().freezeRotation = true;
@@ -101,11 +106,11 @@ public class follow : MonoBehaviour
 
             transform.localPosition = new Vector3(0, transform.localPosition.y, transform.localPosition.z);
             transform.localRotation = Quaternion.Euler(0, 180, 0);
-
+            playerhead.transform.rotation = Quaternion.Euler(-7.5f, playerhead.transform.eulerAngles.y, 0);
             i = 1;
         }
 
-        transform.localPosition = Vector3.MoveTowards(transform.localPosition, new Vector3(0f, transform.localPosition.y, 0.6f), 20 * Time.deltaTime);
+        transform.localPosition = Vector3.MoveTowards(transform.localPosition, new Vector3(0f, transform.localPosition.y, 0.6f), 40 * Time.deltaTime);
 
     }
     private void PlayerLook()
@@ -156,11 +161,14 @@ public class follow : MonoBehaviour
             
             float rayspacing = (enemywidth / 2) * -1;
             bool playerisHit = Physics.Raycast(origin: transform.position + new Vector3(rayspacing + (rayspacing * -i), 2, 0), direction: (Quaternion.AngleAxis(0, enemyhead.transform.up) * enemyhead.transform.forward), out hit, raymaxdistance);
-            print(hit.transform.name);
             if (playerisHit)
             {
                 if (hit.transform.gameObject == player )
                 {
+                    if (hit.distance < 2)
+                    {
+                        Killplayer();
+                    }
                     nhit += 1;
                 }
                
@@ -168,17 +176,22 @@ public class follow : MonoBehaviour
         }
         if (nhit != 0)
         {
+            
             PlayerLook();
         }
         else
         {
-            gameObject.GetComponent<Rigidbody>().Sleep();
-            gameObject.GetComponent<NavMeshAgent>().enabled = false;
-            transform.position = EnemyOut;
-            enemystoped();
-            spawnState = false;
+            enemyOut();
         }
         
+    }
+    private void enemyOut()
+    {
+        gameObject.GetComponent<Rigidbody>().Sleep();
+        gameObject.GetComponent<NavMeshAgent>().enabled = false;
+        transform.position = EnemyOut;
+        enemystoped();
+        spawnState = false;
     }
     private void Enemymoving()
     {
@@ -207,8 +220,8 @@ public class follow : MonoBehaviour
         if (wallisHit)
         {
             float hitdistance = (hit.distance*-1);
-            //print(hitdistance);
-         
+            rayspawndistance = hitdistance;
+            
             spawnZone.transform.parent = player.transform.transform;
 
             //spawnZone.transform.localPosition = new Vector3(spawnZone.transform.localPosition.x, spawnZone.transform.localPosition.y, hitdistance / 1.1f);

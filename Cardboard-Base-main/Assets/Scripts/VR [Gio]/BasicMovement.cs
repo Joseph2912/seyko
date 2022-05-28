@@ -10,20 +10,18 @@ using UnityEngine;
 public class BasicMovement : MonoBehaviour {
 
     new Rigidbody rigidbody;
-    new Camera camera;
 
     int jumps = 1;
     [SerializeField] float speed = 3, jumpForce = 500;
 
     void Start() {
-        camera = GetComponentInChildren<Camera>();
         rigidbody = GetComponent<Rigidbody>();
     }
 
     
     void Update() {
 
-        Vector3 velocity = camera.transform.forward * Input.GetAxis("Vertical") * speed;
+        Vector3 velocity = gameObject.transform.forward * Input.GetAxis("Vertical") * speed;
         transform.position += velocity * Time.deltaTime;
 
         if (Input.GetButtonDown("Jump")) {
