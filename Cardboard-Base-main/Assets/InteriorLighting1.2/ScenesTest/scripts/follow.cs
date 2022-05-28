@@ -15,6 +15,7 @@ public class follow : MonoBehaviour
     [SerializeField] private GameObject lights;
     [SerializeField] private float vaina = 0;
     [SerializeField] private GameObject playerhead;
+    [SerializeField] private GameObject cameraplayer;
   
     private float enemywidth = 0.5f;
     private float raymaxdistance = 200f;
@@ -32,6 +33,7 @@ public class follow : MonoBehaviour
     private Color lightcolor;
     private float lightchek;
     public bool playerdead;
+    public float timer = 0;
 
     void Start()
     {
@@ -56,6 +58,8 @@ public class follow : MonoBehaviour
         
         playerhead.transform.position = new Vector3(player.transform.position.x, playerhead.transform.position.y, player.transform.position.z);
         player.transform.rotation = Quaternion.Euler(0, playerhead.transform.rotation.eulerAngles.y, 0);
+        player.transform.rotation = Quaternion.Euler(0, cameraplayer.transform.rotation.eulerAngles.y, 0);
+
         if (playerdead == false)
         {
             if (spawnState == true)
