@@ -91,13 +91,13 @@ public class follow : MonoBehaviour
                 {
                    timer += Time.deltaTime;
                 }
-               // print(timer);
-                if(timer > 5 && rayspawndistance < -15f)
+                print(timer);
+                if(timer > 5 && rayspawndistance < -10f)
                 {
                     //print(timer);
                     transform.position = spawnZone.transform.position;
                     spawnState = true;
-                    timer = 0;
+                    //timer = 0;
                 }
                 if (Input.GetKeyDown(KeyCode.M) && rayspawndistance < -15f)
                 {
